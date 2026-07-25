@@ -1,18 +1,29 @@
 {
   "contentFormat": "adf",
   "fields": {
-    "project": { "key": "${JIRA_PROJECT_KEY}" },
+    "project": {
+      "key": "${JIRA_PROJECT_KEY}"
+    },
     "summary": "${SUMMARY}",
-    "issuetype": { "name": "${ISSUE_TYPE_NAME|Task}" },
-    "labels": ["Pentest", "Security"],
-    "parent": { "key": "${JIRA_PARENT_ISSUE}" },
+    "issuetype": {
+      "name": "${ISSUE_TYPE_NAME|Task}"
+    },
+    "labels": [
+      "Pentest",
+      "Security"
+    ],
+    "parent": {
+      "key": "${JIRA_PARENT_ISSUE}"
+    },
     "description": {
       "type": "doc",
       "version": 1,
       "content": [
         {
           "type": "panel",
-          "attrs": { "panelType": "error" },
+          "attrs": {
+            "panelType": "error"
+          },
           "content": [
             {
               "type": "paragraph",
@@ -20,7 +31,11 @@
                 {
                   "type": "text",
                   "text": "CVSS v4.0 Score [Score] / [Severity]",
-                  "marks": [{ "type": "strong" }]
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
                 }
               ]
             }
@@ -29,17 +44,47 @@
         {
           "type": "paragraph",
           "content": [
-            { "type": "text", "text": "CVSS v4.0 Vector: ", "marks": [{ "type": "strong" }] },
-            { "type": "text", "text": "[Full CVSS calculator URL]" }
+            {
+              "type": "text",
+              "text": "CVSS v4.0 Vector: ",
+              "marks": [
+                {
+                  "type": "strong"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": "[CVSS v4.0 vector or N/A]"
+            }
           ]
         },
         {
           "type": "paragraph",
-          "content": [{ "type": "text", "text": "-" }]
+          "content": [
+            {
+              "type": "text",
+              "text": "CVSS Calculator URL: ",
+              "marks": [
+                {
+                  "type": "strong"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": "[Full CVSS calculator URL or N/A]"
+            }
+          ]
+        },
+        {
+          "type": "rule"
         },
         {
           "type": "panel",
-          "attrs": { "panelType": "info" },
+          "attrs": {
+            "panelType": "info"
+          },
           "content": [
             {
               "type": "paragraph",
@@ -47,7 +92,11 @@
                 {
                   "type": "text",
                   "text": "OWASP Top 10 (2025) Category",
-                  "marks": [{ "type": "strong" }]
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
                 }
               ]
             }
@@ -56,28 +105,56 @@
         {
           "type": "paragraph",
           "content": [
-            { "type": "text", "text": "OWASP Top 10 (2025) Category: ", "marks": [{ "type": "strong" }] },
-            { "type": "text", "text": "[Category Name]" }
+            {
+              "type": "text",
+              "text": "OWASP Category: ",
+              "marks": [
+                {
+                  "type": "strong"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": "[Category Name]"
+            }
           ]
         },
         {
           "type": "paragraph",
           "content": [
-            { "type": "text", "text": "CWE: ", "marks": [{ "type": "strong" }] },
-            { "type": "text", "text": "[CWE-ID and Name]" }
+            {
+              "type": "text",
+              "text": "CWE: ",
+              "marks": [
+                {
+                  "type": "strong"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": "[CWE-ID and Name]"
+            }
           ]
         },
         {
           "type": "panel",
-          "attrs": { "panelType": "info" },
+          "attrs": {
+            "panelType": "info"
+          },
           "content": [
             {
               "type": "paragraph",
               "content": [
                 {
                   "type": "text",
-                  "text": "Path / Endpoint",
-                  "marks": [{ "type": "strong" }]
+                  "text": "Affected Asset / Endpoint",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
                 }
               ]
             }
@@ -85,23 +162,33 @@
         },
         {
           "type": "paragraph",
-          "content": [{ "type": "text", "text": "[Path or Endpoint details]" }]
+          "content": [
+            {
+              "type": "text",
+              "text": "[Method + URL, host, asset name, or N/A]"
+            }
+          ]
         },
         {
-          "type": "paragraph",
-          "content": [{ "type": "text", "text": "-" }]
+          "type": "rule"
         },
         {
           "type": "panel",
-          "attrs": { "panelType": "info" },
+          "attrs": {
+            "panelType": "info"
+          },
           "content": [
             {
               "type": "paragraph",
               "content": [
                 {
                   "type": "text",
-                  "text": "Description",
-                  "marks": [{ "type": "strong" }]
+                  "text": "Description and Impact",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
                 }
               ]
             }
@@ -109,25 +196,51 @@
         },
         {
           "type": "heading",
-          "attrs": { "level": 4 },
-          "content": [{ "type": "text", "text": "Description" }]
+          "attrs": {
+            "level": 4
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Description"
+            }
+          ]
         },
         {
           "type": "paragraph",
-          "content": [{ "type": "text", "text": "[Detailed description of the bug]" }]
+          "content": [
+            {
+              "type": "text",
+              "text": "[Explain what the issue is in clear, professional language.]"
+            }
+          ]
         },
         {
           "type": "heading",
-          "attrs": { "level": 4 },
-          "content": [{ "type": "text", "text": "Impact" }]
+          "attrs": {
+            "level": 4
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Impact"
+            }
+          ]
         },
         {
           "type": "paragraph",
-          "content": [{ "type": "text", "text": "[Detailed impact of the bug]" }]
+          "content": [
+            {
+              "type": "text",
+              "text": "[Explain the business and security risk if exploited.]"
+            }
+          ]
         },
         {
           "type": "panel",
-          "attrs": { "panelType": "warning" },
+          "attrs": {
+            "panelType": "warning"
+          },
           "content": [
             {
               "type": "paragraph",
@@ -135,7 +248,11 @@
                 {
                   "type": "text",
                   "text": "Step to Reproduce",
-                  "marks": [{ "type": "strong" }]
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
                 }
               ]
             }
@@ -149,7 +266,12 @@
               "content": [
                 {
                   "type": "paragraph",
-                  "content": [{ "type": "text", "text": "[Step 1]" }]
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "[Step 1]"
+                    }
+                  ]
                 }
               ]
             },
@@ -158,27 +280,51 @@
               "content": [
                 {
                   "type": "paragraph",
-                  "content": [{ "type": "text", "text": "[Step 2]" }]
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "[Step 2]"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "[Step 3]"
+                    }
+                  ]
                 }
               ]
             }
           ]
         },
         {
-          "type": "paragraph",
-          "content": [{ "type": "text", "text": "-" }]
+          "type": "rule"
         },
         {
           "type": "panel",
-          "attrs": { "panelType": "note" },
+          "attrs": {
+            "panelType": "note"
+          },
           "content": [
             {
               "type": "paragraph",
               "content": [
                 {
                   "type": "text",
-                  "text": "POC (Proof of Concept)",
-                  "marks": [{ "type": "strong" }]
+                  "text": "Evidence / POC",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
                 }
               ]
             }
@@ -186,20 +332,33 @@
         },
         {
           "type": "paragraph",
-          "content": [{ "type": "text", "text": "[Detailed POC or steps]" }]
+          "content": [
+            {
+              "type": "text",
+              "text": "[Provide request/response snippets, curl commands, screenshots, or notes proving the issue.]"
+            }
+          ]
         },
         {
           "type": "codeBlock",
-          "attrs": { "language": "text" },
-          "content": [{ "type": "text", "text": "[PoC Code/Response Snippet]" }]
+          "attrs": {
+            "language": "text"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "[PoC Code/Response Snippet]"
+            }
+          ]
         },
         {
-          "type": "paragraph",
-          "content": [{ "type": "text", "text": "-" }]
+          "type": "rule"
         },
         {
           "type": "panel",
-          "attrs": { "panelType": "success" },
+          "attrs": {
+            "panelType": "success"
+          },
           "content": [
             {
               "type": "paragraph",
@@ -207,7 +366,11 @@
                 {
                   "type": "text",
                   "text": "Recommendation",
-                  "marks": [{ "type": "strong" }]
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
                 }
               ]
             }
@@ -215,12 +378,91 @@
         },
         {
           "type": "paragraph",
-          "content": [{ "type": "text", "text": "[Detailed recommendation to fix the issue]" }]
+          "content": [
+            {
+              "type": "text",
+              "text": "[Provide specific, actionable remediation steps.]"
+            }
+          ]
         },
         {
-          "type": "codeBlock",
-          "attrs": { "language": "xml" },
-          "content": [{ "type": "text", "text": "<!-- Recommended Configuration -->" }]
+          "type": "rule"
+        },
+        {
+          "type": "panel",
+          "attrs": {
+            "panelType": "info"
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Validation Details",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "Observed Result: ",
+              "marks": [
+                {
+                  "type": "strong"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": "[What was actually seen]"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "Expected Result: ",
+              "marks": [
+                {
+                  "type": "strong"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": "[What should have happened]"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "Verification: ",
+              "marks": [
+                {
+                  "type": "strong"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": "[How to confirm the fix]"
+            }
+          ]
         }
       ]
     }

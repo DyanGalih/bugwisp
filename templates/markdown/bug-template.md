@@ -1,33 +1,31 @@
-# [Issue-ID] [Symbol] Title
+# [Title / Summary]
 
 ## CVSS Score
 
 **CVSS Score [Score] / [Severity]**
 
--
+**CVSS Vector:** [CVSS v4.0 vector or N/A]
+
+**CVSS Calculator URL:** [Full CVSS calculator URL or N/A]
 
 ## OWASP Top 10 Category
 
 **OWASP Category:** [Category Name]
 **CWE:** [CWE-ID and Name]
 
--
+## Affected Asset / Endpoint
 
-## Path / Endpoint
-
-[Path or Endpoint details]
-
--
+[Method + URL, host, asset name, or [N/A]]
 
 ## Description
 
 #### Description
 
-[Detailed description of the bug]
+[Explain what the issue is in clear, professional language.]
 
 #### Impact
 
-[Detailed impact of the bug]
+[Explain the business and security risk if exploited.]
 
 ## Step to Reproduce
 
@@ -35,14 +33,16 @@
 2. [Step 2]
 3. [Step 3]
 
--
+## Evidence / POC
 
-## POC (Proof of Concept)
-
-[Provide details or links to POC if available]
-
--
+[Provide request/response snippets, curl commands, screenshots, or notes proving the issue.]
 
 ## Recommendation
 
-[Detailed recommendation to fix the issue]
+[Provide specific, actionable remediation steps.]
+
+## Validation Details
+
+- **Observed Result:** [What was actually seen]
+- **Expected Result:** [What should have happened]
+- **Verification:** [How to confirm the fix]

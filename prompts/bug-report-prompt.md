@@ -38,6 +38,9 @@ Extract these report fields:
 - Steps to Reproduce
 - Evidence / POC
 - Recommendation
+- Observed Result
+- Expected Result
+- Verification
 
 If the initial input contains no finding information, ask:
 
@@ -88,6 +91,7 @@ Resolve optional fields in this exact order:
 2. OWASP Top 10 Category and CWE
 3. Description and Impact
 4. Recommendation
+5. Validation Details (Observed Result, Expected Result, and Verification)
 
 Do not show questions or choices for optional fields.
 
@@ -148,22 +152,24 @@ Jira MCP is the required communication channel for Jira. Values from `.env` conf
 1. Look for `.env` at the active workspace root, including hidden files, and read it directly when present.
 2. Read `JIRA_BOARD_URL`, `JIRA_BOARD_ID`, `JIRA_PROJECT_KEY`, `JIRA_PARENT_ISSUE`, and any other configured Jira fields. Do not conclude that configuration is missing before checking the exact `.env` path.
 3. Read `ADF_TEMPLATE_PATH`, defaulting to `templates/adf/bug-template.json`, parse it as JSON, and replace placeholders by modifying parsed values. Never construct ADF by manually escaping or concatenating a JSON string.
-4. Preserve the template structure and its colored panel headers. The final description must remain a root ADF object with `type: "doc"`, `version: 1`, and a `content` array. Preserve each `panel` node and its `attrs.panelType`.
-5. Activate and inspect the available Jira MCP tools and their input schemas before constructing the create-issue arguments.
-6. Use Jira MCP to obtain current-user context and discover required metadata, including the exact cloud identifier, project metadata, valid issue types, supported fields, and active sprint information. Resolve a valid issue type before creation; do not guess names such as `Bug` or `Task`.
-7. Ask the user for a required value only when it is unavailable from both `.env` and Jira MCP. Ask only for the specific missing value.
-8. Call the Jira MCP create-issue tool with both of these top-level arguments in the same call:
+4. Preserve the template structure, neutral section headings, native rule separators, and semantic panel headers. The final description must remain a root ADF object with `type: "doc"`, `version: 1`, and a `content` array.
+5. Set the CVSS panel `attrs.panelType` from the final severity: `error` for Critical or High, `warning` for Medium, `note` for Low, and `info` for Informational or `[N/A]`. Preserve the other semantic panel types: `info` for OWASP/CWE, Affected Asset/Endpoint, Description/Impact, and Validation Details; `warning` for Steps to Reproduce; `note` for Evidence/POC; and `success` for Recommendation.
+6. Activate and inspect the available Jira MCP tools and their input schemas before constructing the create-issue arguments.
+7. Use Jira MCP to obtain current-user context and discover required metadata, including the exact cloud identifier, project metadata, valid issue types, supported fields, and active sprint information. Resolve a valid issue type before creation; do not guess names such as `Bug` or `Task`.
+8. Ask the user for a required value only when it is unavailable from both `.env` and Jira MCP. Ask only for the specific missing value.
+9. Call the Jira MCP create-issue tool with both of these top-level arguments in the same call:
    - `description`: the parsed `fields.description` ADF object from the populated template
    - `contentFormat`: the literal string `adf`
-9. Do not stringify the ADF description. Do not pass Markdown in `description`. Do not omit `contentFormat`, place it inside `description`, or rely on the tool default.
-10. Before the MCP call, verify that `description` is an object, `description.type` is `doc`, `description.version` is `1`, `description.content` is an array, and `contentFormat` equals `adf`. Ensure no unresolved placeholder remains.
-11. Create the Jira issue through Jira MCP. Do not stop after displaying the payload.
-12. If Jira reports that Markdown was expected, treat that as proof that `contentFormat` was omitted or misplaced; correct the tool arguments and retry once with the same parsed ADF object.
-13. If Jira reports invalid ADF JSON, rebuild the description from the parsed template object and retry once. Never repair it by hand-escaping or JSON-stringifying the document.
-14. Never replace ADF with Markdown or retry Jira using Markdown on the ADF branch. A local Markdown companion file is permitted, but terminal failure must also preserve the ADF payload and report the exact error.
-15. Never hardcode project keys, board IDs, sprint IDs, parent issues, issue types, or custom-field IDs.
-16. Map CVSS severity to the configured Jira severity field. If that field is unavailable, use Jira priority when supported. Do not invent severity when CVSS is `[N/A]`.
-17. Return the created issue key and URL.
+10. Do not stringify the ADF description. Do not pass Markdown in `description`. Do not omit `contentFormat`, place it inside `description`, or rely on the tool default.
+11. Replace the ordered-list placeholders with one `listItem` per actual reproduction step. Populate the evidence `codeBlock` only when the supplied POC contains a request, response, command, output, or code artifact; otherwise remove that `codeBlock` node instead of inventing content or leaving a placeholder.
+12. Before the MCP call, verify that `description` is an object, `description.type` is `doc`, `description.version` is `1`, `description.content` is an array, and `contentFormat` equals `adf`. Ensure no unresolved placeholder remains.
+13. Create the Jira issue through Jira MCP. Do not stop after displaying the payload.
+14. If Jira reports that Markdown was expected, treat that as proof that `contentFormat` was omitted or misplaced; correct the tool arguments and retry once with the same parsed ADF object.
+15. If Jira reports invalid ADF JSON, rebuild the description from the parsed template object and retry once. Never repair it by hand-escaping or JSON-stringifying the document.
+16. Never replace ADF with Markdown or retry Jira using Markdown on the ADF branch. A local Markdown companion file is permitted, but terminal failure must also preserve the ADF payload and report the exact error.
+17. Never hardcode project keys, board IDs, sprint IDs, parent issues, issue types, or custom-field IDs.
+18. Map CVSS severity to the configured Jira severity field. If that field is unavailable, use Jira priority when supported. Do not invent severity when CVSS is `[N/A]`.
+19. Return the created issue key and URL.
 
 After successful Jira creation:
 
