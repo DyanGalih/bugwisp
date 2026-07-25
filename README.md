@@ -268,7 +268,7 @@ Multi-project support should follow the canonical finding schema and publisher a
 │       ├── markdown/           Generated Markdown reports
 │       └── adf/                Generated ADF payloads
 ├── docs/images/                README screenshots
-├── config/                     Agent registry and security mappings
+├── config/                     Security classification mappings
 └── .env.example               Configuration template
 ```
 
