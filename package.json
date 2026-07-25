@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "enquirer": "^2.4.1",
+    "zod": "^4.4.3"
+  }
+}

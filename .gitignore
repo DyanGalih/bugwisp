@@ -1,0 +1,23 @@
+# Folders with potential secrets/personal data
+.env
+
+# VS Code files
+.vscode/
+
+# Temp files
+*.log
+toolu_bdrk_*
+chat-session-resources/
+
+# OS files
+.DS_Store
+Thumbs.db
+.flash-mem/
+node_modules/
+reporting/output/*
+!reporting/output/markdown/
+!reporting/output/adf/
+reporting/output/markdown/*
+reporting/output/adf/*
+!reporting/output/markdown/.gitkeep
+!reporting/output/adf/.gitkeep

@@ -1,0 +1,228 @@
+{
+  "contentFormat": "adf",
+  "fields": {
+    "project": { "key": "${JIRA_PROJECT_KEY}" },
+    "summary": "${SUMMARY}",
+    "issuetype": { "name": "${ISSUE_TYPE_NAME|Task}" },
+    "labels": ["Pentest", "Security"],
+    "parent": { "key": "${JIRA_PARENT_ISSUE}" },
+    "description": {
+      "type": "doc",
+      "version": 1,
+      "content": [
+        {
+          "type": "panel",
+          "attrs": { "panelType": "error" },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "CVSS v4.0 Score [Score] / [Severity]",
+                  "marks": [{ "type": "strong" }]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "CVSS v4.0 Vector: ", "marks": [{ "type": "strong" }] },
+            { "type": "text", "text": "[Full CVSS calculator URL]" }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [{ "type": "text", "text": "-" }]
+        },
+        {
+          "type": "panel",
+          "attrs": { "panelType": "info" },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "OWASP Top 10 (2025) Category",
+                  "marks": [{ "type": "strong" }]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "OWASP Top 10 (2025) Category: ", "marks": [{ "type": "strong" }] },
+            { "type": "text", "text": "[Category Name]" }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "CWE: ", "marks": [{ "type": "strong" }] },
+            { "type": "text", "text": "[CWE-ID and Name]" }
+          ]
+        },
+        {
+          "type": "panel",
+          "attrs": { "panelType": "info" },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Path / Endpoint",
+                  "marks": [{ "type": "strong" }]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [{ "type": "text", "text": "[Path or Endpoint details]" }]
+        },
+        {
+          "type": "paragraph",
+          "content": [{ "type": "text", "text": "-" }]
+        },
+        {
+          "type": "panel",
+          "attrs": { "panelType": "info" },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Description",
+                  "marks": [{ "type": "strong" }]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "attrs": { "level": 4 },
+          "content": [{ "type": "text", "text": "Description" }]
+        },
+        {
+          "type": "paragraph",
+          "content": [{ "type": "text", "text": "[Detailed description of the bug]" }]
+        },
+        {
+          "type": "heading",
+          "attrs": { "level": 4 },
+          "content": [{ "type": "text", "text": "Impact" }]
+        },
+        {
+          "type": "paragraph",
+          "content": [{ "type": "text", "text": "[Detailed impact of the bug]" }]
+        },
+        {
+          "type": "panel",
+          "attrs": { "panelType": "warning" },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Step to Reproduce",
+                  "marks": [{ "type": "strong" }]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "orderedList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{ "type": "text", "text": "[Step 1]" }]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{ "type": "text", "text": "[Step 2]" }]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [{ "type": "text", "text": "-" }]
+        },
+        {
+          "type": "panel",
+          "attrs": { "panelType": "note" },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "POC (Proof of Concept)",
+                  "marks": [{ "type": "strong" }]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [{ "type": "text", "text": "[Detailed POC or steps]" }]
+        },
+        {
+          "type": "codeBlock",
+          "attrs": { "language": "text" },
+          "content": [{ "type": "text", "text": "[PoC Code/Response Snippet]" }]
+        },
+        {
+          "type": "paragraph",
+          "content": [{ "type": "text", "text": "-" }]
+        },
+        {
+          "type": "panel",
+          "attrs": { "panelType": "success" },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Recommendation",
+                  "marks": [{ "type": "strong" }]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [{ "type": "text", "text": "[Detailed recommendation to fix the issue]" }]
+        },
+        {
+          "type": "codeBlock",
+          "attrs": { "language": "xml" },
+          "content": [{ "type": "text", "text": "<!-- Recommended Configuration -->" }]
+        }
+      ]
+    }
+  }
+}

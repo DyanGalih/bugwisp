@@ -1,0 +1,243 @@
+{
+  "projectKey": "${JIRA_PROJECT_KEY}",
+  "summary": "[Misconfiguration] Verbose ASP.NET Error Messages Expose Internal Application Details",
+  "issueTypeName": "Bug",
+  "additional_fields": {
+    "customfield_10054": { "value": "Low" },
+    "labels": ["Misconfiguration", "InformationDisclosure"]
+  },
+  "contentFormat": "adf",
+  "description": {
+    "type": "doc",
+    "version": 1,
+    "content": [
+      {
+        "type": "panel",
+        "attrs": { "panelType": "error" },
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "CVSS Score 3.7 / Low",
+                "marks": [{ "type": "strong" }]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [{ "type": "text", "text": "-" }]
+      },
+      {
+        "type": "panel",
+        "attrs": { "panelType": "info" },
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "OWASP Top 10 Category",
+                "marks": [{ "type": "strong" }]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          { "type": "text", "text": "OWASP Category: ", "marks": [{ "type": "strong" }] },
+          { "type": "text", "text": "A05:2021-Security Misconfiguration" }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          { "type": "text", "text": "CWE: ", "marks": [{ "type": "strong" }] },
+          { "type": "text", "text": "CWE-209: Generation of Error Message Containing Sensitive Information" }
+        ]
+      },
+      {
+        "type": "panel",
+        "attrs": { "panelType": "info" },
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Path / Endpoint",
+                "marks": [{ "type": "strong" }]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [{ "type": "text", "text": "GET ${TARGET_URL}/Error/NotFound" }]
+      },
+      {
+        "type": "paragraph",
+        "content": [{ "type": "text", "text": "-" }]
+      },
+      {
+        "type": "panel",
+        "attrs": { "panelType": "info" },
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Description",
+                "marks": [{ "type": "strong" }]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": { "level": 4 },
+        "content": [{ "type": "text", "text": "Description" }]
+      },
+      {
+        "type": "paragraph",
+        "content": [{ "type": "text", "text": "The server is returning a verbose ASP.NET exception and stack trace directly in the HTTP response because <customErrors mode=\"Off\"/> is enabled. This allows detailed standard errors to be displayed to remote users rather than generic error messages." }]
+      },
+      {
+        "type": "heading",
+        "attrs": { "level": 4 },
+        "content": [{ "type": "text", "text": "Impact" }]
+      },
+      {
+        "type": "paragraph",
+        "content": [{ "type": "text", "text": "The response reveals sensitive internal application details, including ASP.NET MVC and Web Forms internals, view locations (e.g., views_shared_site_master), and authentication implementation details like GenericIdentity and FormsIdentity. This information aids attackers in mapping the internal request-processing flow and identifying underlying unhandled exceptions." }]
+      },
+      {
+        "type": "panel",
+        "attrs": { "panelType": "warning" },
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Step to Reproduce",
+                "marks": [{ "type": "strong" }]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "orderedList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [{ "type": "text", "text": "Navigate to the following URL: ${TARGET_URL}/Error/NotFound" }]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [{ "type": "text", "text": "Observe the verbose ASP.NET error message and stack trace returned in the response body." }]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [{ "type": "text", "text": "-" }]
+      },
+      {
+        "type": "panel",
+        "attrs": { "panelType": "note" },
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "POC (Proof of Concept)",
+                "marks": [{ "type": "strong" }]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [{ "type": "text", "text": "Request:" }]
+      },
+      {
+        "type": "paragraph",
+        "content": [{ "type": "text", "text": "curl -i ${TARGET_URL}/Error/NotFound", "marks": [{ "type": "code" }] }]
+      },
+      {
+        "type": "paragraph",
+        "content": [{ "type": "text", "text": "Response Example Snippet:" }]
+      },
+      {
+        "type": "codeBlock",
+        "attrs": { "language": "text" },
+        "content": [
+          {
+            "type": "text",
+            "text": "[InvalidCastException: Unable to cast object of type 'System.Security.Principal.GenericIdentity' to type 'System.Web.Security.FormsIdentity'.]\nASP.views_shared_site_master.__RenderSiteMaster(HtmlTextWriter __w, Control parameterContainer) in c:\\\\...\\\\Views\\\\Shared\\\\Site.Master:12"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [{ "type": "text", "text": "-" }]
+      },
+      {
+        "type": "panel",
+        "attrs": { "panelType": "success" },
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Recommendation",
+                "marks": [{ "type": "strong" }]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [{ "type": "text", "text": "Configure production error handling to log detailed exceptions server-side while returning generic messages to remote clients. Update the web.config as follows:" }]
+      },
+      {
+        "type": "codeBlock",
+        "attrs": { "language": "xml" },
+        "content": [
+          {
+            "type": "text",
+            "text": "<system.web>\n  <customErrors mode=\"RemoteOnly\" defaultRedirect=\"~/Error\" />\n  <compilation debug=\"false\" />\n</system.web>"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [{ "type": "text", "text": "Additionally, verify IIS <httpErrors> behavior and implement a generic error handler that checks identity types before performing casts." }]
+      }
+    ]
+  }
+}
