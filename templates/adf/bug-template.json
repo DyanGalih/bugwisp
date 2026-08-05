@@ -1,21 +1,9 @@
 {
-  "contentFormat": "adf",
-  "fields": {
-    "project": {
-      "key": "${JIRA_PROJECT_KEY}"
-    },
-    "summary": "${SUMMARY}",
-    "issuetype": {
-      "name": "${ISSUE_TYPE_NAME|Task}"
-    },
-    "labels": [
-      "Pentest",
-      "Security"
-    ],
-    "parent": {
-      "key": "${JIRA_PARENT_ISSUE}"
-    },
-    "description": {
+  "cloudId": "${JIRA_CLOUD_ID}",
+  "projectKey": "${JIRA_PROJECT_KEY}",
+  "issueTypeName": "${JIRA_ISSUE_TYPE|Bug}",
+  "summary": "${SUMMARY}",
+  "description": {
       "type": "doc",
       "version": 1,
       "content": [
@@ -465,6 +453,14 @@
           ]
         }
       ]
-    }
-  }
+    },
+  "parent": "${JIRA_PARENT_ISSUE}",
+  "additional_fields": {
+    "labels": [
+      "Pentest",
+      "Security"
+    ]
+  },
+  "contentFormat": "adf",
+  "responseContentFormat": "markdown"
 }

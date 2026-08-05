@@ -10,7 +10,7 @@ Act as an expert security researcher and penetration tester. Convert a raw techn
 - Ask exactly one question per turn and wait for the answer.
 - Never invent endpoints, requests, responses, reproduction actions, observed results, credentials, or evidence.
 - Generate optional analysis only from collected facts.
-- Read report and Jira configuration from `.env`; do not ask the user to repeat configured values.
+- The report CLI reads report and Jira configuration from `.env`; do not inspect it manually or ask the user to repeat configured values.
 - Do not produce the final report until intake is complete.
 
 ## Field states
@@ -125,78 +125,39 @@ Use this OWASP Top 10:2025 list:
 9. A09:2025 - Security Logging and Alerting Failures
 10. A10:2025 - Mishandling of Exceptional Conditions
 
-## 4. Build the report
+## 4. Generate and deliver the report
 
 After all mandatory and optional fields are resolved:
 
-1. Read `.env`.
-2. Read the template selected by `REPORT_FORMAT`.
-3. Populate every template section.
-4. Ensure all mandatory fields are present.
-5. Ensure no unresolved template placeholder remains.
+1. Construct one flat finding object with exactly these keys: `summary`, `cvssScore`, `cvssSeverity`, `cvssVector`, `cvssCalculatorUrl`, `owaspCategory`, `cwe`, `path`, `description`, `impact`, `stepsToReproduce`, `evidenceText`, `evidenceCodeBlock`, `recommendation`, `observedResult`, `expectedResult`, and `verification`.
+2. Save that object as a temporary JSON input file. This is the only file the agent constructs manually.
+3. From the repository root, immediately run:
+   ```bash
+   node src/scripts/generate-report.js --input <finding-json-path>
+   ```
+   When the user explicitly overrides the configured format, append `--format adf` or `--format markdown`.
+4. The CLI owns all remaining local work: it loads `.env`, loads both templates, calls the ADF generator, renders Markdown when configured, selects matching collision-safe filenames, writes ADF and Markdown concurrently, and prints one JSON result containing the artifact paths.
 
-Write in a professional, objective, third-party tone. Make description and impact clear to product managers, and make reproduction, evidence, and remediation precise for developers. Preserve relevant technical artifacts exactly.
+### Fast-path restrictions
 
-## 5. Deliver the report
+- Do not read report memory, prior reports, prior ADF files, or prior Markdown files for wording or structure. Use only the current user evidence and answers.
+- Do not read `.env`, either template, `adf-generator.js`, `markdown-generator.js`, `generate-report.js`, package metadata, installer files, or output directories before running the CLI. The CLI already owns configuration and template discovery.
+- Do not create an inline Node.js script or heredoc to generate reports. Use the fixed CLI command.
+- Do not inspect or validate generated Markdown. Do not patch placeholders manually.
+- Do not inspect or validate the ADF structure before Jira submission.
+- If the CLI exits with an error, return its exact stderr and stop. Do not search the repository, inspect implementation files, repair artifacts, or retry unless the user explicitly asks to diagnose that error.
 
-Select the branch from `REPORT_FORMAT`. If the user explicitly requests Jira or Markdown in the conversation, that request overrides `REPORT_FORMAT`.
+### Jira delivery
 
-Follow exactly one branch. Do not offer, suggest, or start the other branch after successful delivery unless the user explicitly requests a format change.
+When the CLI result contains a non-null `adfPath`:
 
-### Jira ADF
+1. Read the saved ADF JSON exactly once solely to deserialize the complete Jira MCP argument object.
+2. Pass that entire object directly to the Jira MCP create-issue tool without modifying, reconstructing, validating, or selectively copying fields.
+3. Make exactly one Jira create attempt.
+4. If Jira returns an error, report the exact MCP error and stop. Do not repair the payload, change issue type or parent, downgrade format, or retry.
+5. On success, return the Jira issue key and URL plus the CLI-provided ADF and Markdown paths.
 
-When `REPORT_FORMAT=adf`:
-
-Jira MCP is the required communication channel for Jira. Values from `.env` configure the request but do not replace MCP communication.
-
-1. Look for `.env` at the active workspace root, including hidden files, and read it directly when present.
-2. Read `JIRA_BOARD_URL`, `JIRA_BOARD_ID`, `JIRA_PROJECT_KEY`, `JIRA_PARENT_ISSUE`, and any other configured Jira fields. Do not conclude that configuration is missing before checking the exact `.env` path.
-3. Read `ADF_TEMPLATE_PATH`, defaulting to `templates/adf/bug-template.json`, parse it as JSON, and replace placeholders by modifying parsed values. Never construct ADF by manually escaping or concatenating a JSON string.
-4. Preserve the template structure, neutral section headings, native rule separators, and semantic panel headers. The final description must remain a root ADF object with `type: "doc"`, `version: 1`, and a `content` array.
-5. Set the CVSS panel `attrs.panelType` from the final severity: `error` for Critical or High, `warning` for Medium, `note` for Low, and `info` for Informational or `[N/A]`. Preserve the other semantic panel types: `info` for OWASP/CWE, Affected Asset/Endpoint, Description/Impact, and Validation Details; `warning` for Steps to Reproduce; `note` for Evidence/POC; and `success` for Recommendation.
-6. Activate and inspect the available Jira MCP tools and their input schemas before constructing the create-issue arguments.
-7. Use Jira MCP to obtain current-user context and discover required metadata, including the exact cloud identifier, project metadata, valid issue types, supported fields, and active sprint information. Resolve a valid issue type before creation; do not guess names such as `Bug` or `Task`.
-8. Ask the user for a required value only when it is unavailable from both `.env` and Jira MCP. Ask only for the specific missing value.
-9. Call the Jira MCP create-issue tool with both of these top-level arguments in the same call:
-   - `description`: the parsed `fields.description` ADF object from the populated template
-   - `contentFormat`: the literal string `adf`
-10. Do not stringify the ADF description. Do not pass Markdown in `description`. Do not omit `contentFormat`, place it inside `description`, or rely on the tool default.
-11. Replace the ordered-list placeholders with one `listItem` per actual reproduction step. Populate the evidence `codeBlock` only when the supplied POC contains a request, response, command, output, or code artifact; otherwise remove that `codeBlock` node instead of inventing content or leaving a placeholder.
-12. Before the MCP call, verify that `description` is an object, `description.type` is `doc`, `description.version` is `1`, `description.content` is an array, and `contentFormat` equals `adf`. Ensure no unresolved placeholder remains.
-13. Create the Jira issue through Jira MCP. Do not stop after displaying the payload.
-14. If Jira reports that Markdown was expected, treat that as proof that `contentFormat` was omitted or misplaced; correct the tool arguments and retry once with the same parsed ADF object.
-15. If Jira reports invalid ADF JSON, rebuild the description from the parsed template object and retry once. Never repair it by hand-escaping or JSON-stringifying the document.
-16. Never replace ADF with Markdown or retry Jira using Markdown on the ADF branch. A local Markdown companion file is permitted, but terminal failure must also preserve the ADF payload and report the exact error.
-17. Never hardcode project keys, board IDs, sprint IDs, parent issues, issue types, or custom-field IDs.
-18. Map CVSS severity to the configured Jira severity field. If that field is unavailable, use Jira priority when supported. Do not invent severity when CVSS is `[N/A]`.
-19. Return the created issue key and URL.
-
-After successful Jira creation:
-
-1. Read `GENERATE_MARKDOWN_COPY`, defaulting to `false` when it is absent.
-2. When `GENERATE_MARKDOWN_COPY=true`, read `REPORT_TEMPLATE_PATH`, defaulting to `templates/markdown/bug-template.md`, render the same completed finding as Markdown, and save it under `reporting/output/markdown/`.
-3. Use a filesystem-safe filename derived from the title with the `.md` extension. Do not overwrite an existing report; append a numeric suffix when necessary.
-4. Return both the created Jira issue key and URL and, when generated, the local Markdown path.
-
-If Jira creation still fails after the allowed ADF retry:
-
-1. Do not discard or downgrade the ADF payload.
-2. Create `reporting/output/adf/` and `reporting/output/markdown/` when they do not exist.
-3. Save the completed ADF payload as valid JSON under `reporting/output/adf/` with a filesystem-safe filename derived from the title and the `.json` extension.
-4. Read `REPORT_TEMPLATE_PATH`, defaulting to `templates/markdown/bug-template.md`, render the same completed finding as Markdown, and save it under `reporting/output/markdown/` with the same filename stem and the `.md` extension.
-5. Do not overwrite existing reports. Select one numeric suffix that is available for both files so the ADF and Markdown fallback artifacts keep matching filename stems.
-6. Report the exact Jira MCP error and return both saved fallback paths.
-
-### Markdown
-
-When `REPORT_FORMAT=markdown` or is absent:
-
-1. Read `REPORT_TEMPLATE_PATH`, defaulting to `templates/markdown/bug-template.md`.
-2. Render the completed report as Markdown.
-3. Create `reporting/output/markdown/` when it does not exist.
-4. Save it under `reporting/output/markdown/` with a filesystem-safe filename derived from the title and the `.md` extension.
-5. Do not overwrite an existing report; append a numeric suffix when necessary.
-6. Return the saved file path.
+When the CLI result has `adfPath: null`, return the Markdown path and do not call Jira MCP.
 
 ## Completion condition
 
@@ -206,5 +167,5 @@ The task is complete only when:
 - every optional field is provided, AI-generated, or `[N/A]`; and
 - one delivery condition is satisfied:
   - the Markdown branch report is saved under `reporting/output/markdown/`;
-  - the Jira issue is created, with a local Markdown copy also saved when `GENERATE_MARKDOWN_COPY=true`; or
-  - terminal Jira MCP failure is reported and matching ADF and Markdown fallback files are saved under their format-specific output directories.
+  - the Jira issue is created from the CLI-generated Jira MCP JSON, with the CLI-generated Markdown path returned when enabled; or
+  - the first CLI or Jira MCP error is reported unchanged together with any artifact paths already returned by the CLI.

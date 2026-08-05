@@ -21,3 +21,7 @@ reporting/output/markdown/*
 reporting/output/adf/*
 !reporting/output/markdown/.gitkeep
 !reporting/output/adf/.gitkeep
+
+.github
+.flash-mem/
+tmp/

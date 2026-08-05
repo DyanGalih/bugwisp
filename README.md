@@ -252,11 +252,10 @@ Multi-project support should follow the canonical finding schema and publisher a
 ```text
 .
 ├── index.js                    CLI entry point
-├── commands/init.js            Interactive agent selection
-├── lib/
-│   ├── installer.js            Agent-specific skill installer
-│   └── installer.test.js       Installer self-test
-├── prompts/
+ ├── commands/init.js            Interactive agent selection
+ ├── lib/
+ │   ├── installer.js            Agent-specific skill installer
+ ├── prompts/
 │   └── bug-report-prompt.md    Reporting workflow
 ├── templates/
 │   ├── raw/                    Simple and detailed raw input templates
@@ -274,8 +273,8 @@ Multi-project support should follow the canonical finding schema and publisher a
 
 ## 🧪 Development
 
-Run the installer self-test:
+Run the test suite:
 
 ```bash
-node lib/installer.test.js
+npm test
 ```

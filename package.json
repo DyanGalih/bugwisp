@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "report:generate": "node scripts/generate-report.js",
+    "test": "node --test"
+  },
   "dependencies": {
     "enquirer": "^2.4.1",
     "zod": "^4.4.3"

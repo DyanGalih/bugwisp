@@ -1,0 +1,56 @@
+{
+  "project_name": "Acme Portal",
+  "client_name": "Acme Corp",
+  "assessment_type": "External Web Application",
+  "environment": "Production",
+  "start_date": "2026-07-01",
+  "end_date": "2026-07-05",
+  "report_version": "1.0",
+  "report_date": "2026-07-10",
+  "classification": "Confidential",
+  "in_scope": "https://portal.acme.com",
+  "out_of_scope": "Third-party CDN",
+  "assessment_team": "Alice, Bob",
+  "methodology": "OWASP WSTG",
+  "tools": ["Burp Suite", "nmap"],
+  "target_inventory": ["portal.acme.com"],
+  "executive_summary": "Acme Portal was assessed for external web application vulnerabilities. Two findings were identified, the most critical being SQL injection in the login form.",
+  "executive_recommendations": [
+    "Migrate all SQL statements to parameterized queries.",
+    "Enable a Content Security Policy across the portal."
+  ],
+  "findings": [
+    {
+      "summary": "SQL Injection in login",
+      "cvssScore": "9.8",
+      "cvssSeverity": "Critical",
+      "cvssVector": "AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+      "cvssCalculatorUrl": "https://cvss.example.com/calc",
+      "owaspCategory": "A03 - Injection",
+      "cwe": "CWE-89: SQL Injection",
+      "path": "POST https://app.example.com/login",
+      "description": "The login form is vulnerable to SQL injection via the username parameter.",
+      "impact": "Full database compromise.",
+      "stepsToReproduce": ["Open the login page.", "Inject payload into username.", "Observe database output."],
+      "evidenceText": "Server returned a database error with injected content.",
+      "evidenceCodeBlock": "Error: syntax error at or near 'OR 1=1'",
+      "recommendation": "Use parameterized queries.",
+      "status": "Open"
+    },
+    {
+      "summary": "Missing Content Security Policy header",
+      "cvssScore": "4.3",
+      "cvssSeverity": "Medium",
+      "cvssVector": "AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+      "owaspCategory": "A05 - Security Misconfiguration",
+      "cwe": "CWE-693: Protection Mechanism Failure",
+      "path": "GET https://portal.acme.com/",
+      "description": "Responses do not include a Content-Security-Policy header.",
+      "impact": "Increased risk of client-side attacks such as XSS.",
+      "stepsToReproduce": ["Load the portal homepage.", "Inspect response headers.", "Note the missing CSP header."],
+      "evidenceText": "No Content-Security-Policy header present in response.",
+      "recommendation": "Configure a restrictive Content-Security-Policy header.",
+      "status": "Open"
+    }
+  ]
+}
