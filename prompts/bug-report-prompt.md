@@ -136,7 +136,7 @@ After all mandatory and optional fields are resolved:
    node src/scripts/generate-report.js --input <finding-json-path>
    ```
    When the user explicitly overrides the configured format, append `--format adf` or `--format markdown`.
-4. The CLI owns all remaining local work: it loads `.env`, loads both templates, calls the ADF generator, renders Markdown when configured, selects matching collision-safe filenames, writes ADF and Markdown concurrently, and prints one JSON result containing the artifact paths.
+4. The CLI owns all remaining local work: it loads `.env`, loads the templates, calls the ADF generator, renders Markdown when configured, selects matching collision-safe filenames, writes the artifacts, and prints one JSON result containing provisional paths.
 
 ### Fast-path restrictions
 
@@ -155,7 +155,13 @@ When the CLI result contains a non-null `adfPath`:
 2. Pass that entire object directly to the Jira MCP create-issue tool without modifying, reconstructing, validating, or selectively copying fields.
 3. Make exactly one Jira create attempt.
 4. If Jira returns an error, report the exact MCP error and stop. Do not repair the payload, change issue type or parent, downgrade format, or retry.
-5. On success, return the Jira issue key and URL plus the CLI-provided ADF and Markdown paths.
+5. On success, run the CLI rename operation using the returned issue key and both provisional paths:
+   ```bash
+   node src/scripts/generate-report.js --rename-jira-key <issue-key> --adf-path <adf-path> --markdown-path <markdown-path>
+   ```
+   Use the JSON paths returned by this command as the final artifact paths. This produces one shared basename, such as `KAN-123-finding.json` and `KAN-123-finding.md`.
+6. Return the Jira issue key and URL plus the final ADF and Markdown paths.
+7. If the rename command fails, retain and report the original CLI paths and the exact rename error. Do not retry Jira creation.
 
 When the CLI result has `adfPath: null`, return the Markdown path and do not call Jira MCP.
 
@@ -167,5 +173,5 @@ The task is complete only when:
 - every optional field is provided, AI-generated, or `[N/A]`; and
 - one delivery condition is satisfied:
   - the Markdown branch report is saved under `reporting/output/markdown/`;
-  - the Jira issue is created from the CLI-generated Jira MCP JSON, with the CLI-generated Markdown path returned when enabled; or
+  - the Jira issue is created from the CLI-generated Jira MCP JSON, with the final CLI-generated Markdown path returned when enabled; or
   - the first CLI or Jira MCP error is reported unchanged together with any artifact paths already returned by the CLI.

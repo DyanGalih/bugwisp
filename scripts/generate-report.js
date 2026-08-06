@@ -9,6 +9,21 @@ const { slug } = require('../lib/slug');
 const sourceRoot = path.resolve(__dirname, '..');
 
 function parseArgs(argv) {
+  const renameIndex = argv.indexOf('--rename-jira-key');
+  if (renameIndex !== -1) {
+    const jiraKey = argv[renameIndex + 1];
+    const adfIndex = argv.indexOf('--adf-path');
+    const markdownIndex = argv.indexOf('--markdown-path');
+    if (!jiraKey || adfIndex === -1 || markdownIndex === -1 || !argv[adfIndex + 1] || !argv[markdownIndex + 1]) {
+      throw new Error('Usage: generate-report.js --rename-jira-key <ISSUE-KEY> --adf-path <path> --markdown-path <path>');
+    }
+    return {
+      renameJiraKey: jiraKey,
+      adfPath: path.resolve(argv[adfIndex + 1]),
+      markdownPath: path.resolve(argv[markdownIndex + 1]),
+    };
+  }
+
   const inputIndex = argv.indexOf('--input');
   if (inputIndex === -1 || !argv[inputIndex + 1]) {
     throw new Error('Usage: generate-report.js --input <finding.json> [--format adf|markdown]');
@@ -19,6 +34,52 @@ function parseArgs(argv) {
     throw new Error('--format must be either adf or markdown');
   }
   return { inputPath: path.resolve(argv[inputIndex + 1]), format };
+}
+
+function validateJiraKey(jiraKey) {
+  if (!/^[A-Za-z][A-Za-z0-9]*-[0-9]+$/.test(jiraKey)) {
+    throw new Error(`Unsafe Jira issue key: ${jiraKey}`);
+  }
+}
+
+async function renameArtifacts(jiraKey, adfPath, markdownPath) {
+  validateJiraKey(jiraKey);
+  const adf = path.parse(adfPath);
+  const markdown = path.parse(markdownPath);
+  const adfTarget = path.join(adf.dir, `${jiraKey}-${adf.name}${adf.ext}`);
+  const markdownTarget = path.join(markdown.dir, `${jiraKey}-${markdown.name}${markdown.ext}`);
+
+  if (adfTarget === adfPath || markdownTarget === markdownPath) return { adfPath, markdownPath };
+  let adfLinked = false;
+  let markdownLinked = false;
+  try {
+    await fs.promises.link(adfPath, adfTarget);
+    adfLinked = true;
+    await fs.promises.unlink(adfPath);
+    await fs.promises.link(markdownPath, markdownTarget);
+    markdownLinked = true;
+    await fs.promises.unlink(markdownPath);
+  } catch (error) {
+    const rollbackErrors = [];
+    for (const [linked, target, source, label] of [
+      [adfLinked, adfTarget, adfPath, 'ADF'],
+      [markdownLinked, markdownTarget, markdownPath, 'Markdown'],
+    ]) {
+      if (!linked) continue;
+      try {
+        if (fs.existsSync(source)) await fs.promises.unlink(target);
+        else {
+          await fs.promises.link(target, source);
+          await fs.promises.unlink(target);
+        }
+      } catch (rollbackError) {
+        rollbackErrors.push(`${label} rollback failed: ${rollbackError.message}`);
+      }
+    }
+    const suffix = rollbackErrors.length ? ` ${rollbackErrors.join('; ')}` : ' Original artifacts restored.';
+    throw new Error(`Failed to rename artifacts for ${jiraKey}: ${error.message}.${suffix}`);
+  }
+  return { adfPath: adfTarget, markdownPath: markdownTarget };
 }
 
 function loadEnv() {
@@ -73,6 +134,11 @@ function selectOutputPaths(summary, includeAdf, includeMarkdown) {
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
+  if (args.renameJiraKey) {
+    const output = await renameArtifacts(args.renameJiraKey, args.adfPath, args.markdownPath);
+    process.stdout.write(`${JSON.stringify(output)}\n`);
+    return;
+  }
   loadEnv();
 
   let finding;
@@ -123,7 +189,11 @@ async function main() {
   })}\n`);
 }
 
-main().catch(error => {
-  process.stderr.write((error.message || String(error)) + "\n");
-  process.exitCode = 1;
-});
+module.exports = { parseArgs, renameArtifacts, selectOutputPaths, validateJiraKey };
+
+if (require.main === module) {
+  main().catch(error => {
+    process.stderr.write((error.message || String(error)) + "\n");
+    process.exitCode = 1;
+  });
+}
