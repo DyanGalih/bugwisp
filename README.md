@@ -6,6 +6,10 @@
 
 **From raw proof to polished reports.**
 
+[![Version](https://img.shields.io/badge/version-0.2.0-22c55e)](package.json)
+[![CLI](https://img.shields.io/badge/CLI-optimized-blue)](package.json)
+[![Agents](https://img.shields.io/badge/Agents-34%2B%20supported-10b981)](#-supported-agents)
+
 BugWisp is a local CLI tool and a set of AI coding agent skills that standardize and automate Penetration Testing reporting workflows into Markdown and Jira ADF. It installs the `bugwisp.*` skills natively for 34+ AI coding agents, including Claude Code, Cursor, GitHub Copilot, Codex, Gemini, and OpenCode.
 
 The skills collect missing vulnerability details, generate optional report content from evidence, and rely on the local BugWisp CLI to compile, validate, and render the final Markdown or Atlassian Document Format (ADF) reports, or create Jira issues through Atlassian Rovo MCP.
