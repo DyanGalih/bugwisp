@@ -1,31 +1,51 @@
-# BugWisp
+# BugWisp v0.2.0
 
-BugWisp installs public reporting skills for AI coding agents.
+BugWisp is a local CLI tool and set of AI coding agent skills designed to standardize and automate Penetration Testing reporting workflows into Markdown and Jira ADF.
 
-## Install
+## What's New in v0.2.0
+- **Report Compiler CLI Pipeline**: Replaced token-heavy LLM report formatting with an efficient local CLI formatting pipeline (`scaffold` and `compile`).
+- **AI Agent Skills (`bugwisp.*`)**: Prompts have been completely refactored, renamed, and improved to enforce using the CLI pipeline for generating final artifacts instead of hallucinating Markdown/ADF themselves.
+- **Smart Skill Installer**: `bugwisp init` now extracts explicit plugin names and descriptions directly from YAML frontmatter instead of relying on filenames, preventing double-frontmatter issues across IDEs.
 
-Install the scoped CLI and provision the bundled skills:
+## Installation
+
+Install the scoped CLI globally via npm:
 
 ```bash
 npm install --global @dyangalih/bugwisp
-bugwisp install
 ```
 
-Select one or more supported targets when prompted, including:
+## Step-by-Step Usage
 
-- `.agent`
-- `.cursor`
-- `.opencode`
-- Claude Code, Codex, GitHub Copilot, Gemini, and other configured agents
+### 1. Initialize Skills for your AI Agents
+Provision the bundled skills into your current workspace or project so that your AI IDEs (Cursor, Windsurf, Claude Code, etc.) know how to use BugWisp:
 
-The installer rejects unsupported targets, refuses to overwrite existing files, validates target containment, and rolls back all files created by a failed multi-target installation.
+```bash
+bugwisp init
+```
+Select one or more supported targets when prompted (e.g., `.cursor`, `.agent`, `.claude`). The installer will write the skills (`bugwisp.bug-report`, `bugwisp.compile`, etc.) into your local workspace.
 
-Installed skills include:
+### 2. Scaffold a Project
+Initialize a new reporting project to create the `engagement.json` metadata skeleton:
 
-- `bug-report-prompt`
-- `markdown-generator`
+```bash
+bugwisp scaffold
+```
+This generates the `engagement.json` file where you define executive summaries, scopes, and Jira configuration.
 
-Public report templates are copied under `.bugwisp/templates/` in the selected workspace.
+### 3. Generate Findings
+Ask your AI agent to create findings based on raw scanner data or your penetration testing results. The AI will output structured JSON files inside the `./findings/` directory according to strict Zod schemas.
+
+### 4. Compile the Final Reports
+Compile the raw JSON findings and `engagement.json` into the final Markdown and Jira ADF payloads:
+
+```bash
+bugwisp compile --dir ./findings
+```
+This command validates all input data and compiles:
+- The final aggregated report (`reporting/output/final/pentest-report.md`)
+- Individual markdown findings (`reporting/output/markdown/*.md`)
+- Individual Jira ADF payloads (`reporting/output/adf/*.json`)
 
 ## Development
 
@@ -36,4 +56,4 @@ npm install
 npm test
 ```
 
-BugWisp runs as a local CommonJS CLI with `zod` and `enquirer`.
+BugWisp runs as a local CommonJS CLI using `zod` for strict schema validation and `enquirer` for interactive prompts.
