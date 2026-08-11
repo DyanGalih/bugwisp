@@ -2,39 +2,40 @@
 const fs = require('fs');
 const path = require('path');
 const { MultiSelect } = require('enquirer');
-const { installSkill, AGENT_CONFIGS } = require('../lib/installer');
+const { installBundle, AGENT_CONFIGS } = require('../lib/installer');
 
 const PROMPTS_DIR = path.join(__dirname, '../prompts');
 
 async function init() {
-    const prompts = fs.readdirSync(PROMPTS_DIR).filter(f => f.endsWith('.md'));
-    if (!prompts.length) {
-        console.error('No prompts found in', PROMPTS_DIR);
-        process.exit(1);
-    }
+  const prompts = fs.readdirSync(PROMPTS_DIR).filter(file => file.endsWith('.md'));
+  if (!prompts.length) throw new Error(`No prompts found in ${PROMPTS_DIR}`);
 
-    const agentSelect = new MultiSelect({
-        name: 'agents',
-        message: 'Select target agents to install all skills to',
-        choices: Object.keys(AGENT_CONFIGS).sort()
-    });
+  const agents = await new MultiSelect({
+    name: 'agents',
+    message: 'Select target agents to install all skills to',
+    choices: Object.keys(AGENT_CONFIGS).sort(),
+  }).run();
 
-    const agents = await agentSelect.run();
-    if (!agents.length) {
-        console.log('No agents selected. Exiting.');
-        return;
-    }
+  if (!agents.length) {
+    console.log('No agents selected. Exiting.');
+    return [];
+  }
 
-    for (const agent of agents) {
-        for (const prompt of prompts) {
-            installSkill(agent, path.join(PROMPTS_DIR, prompt));
-            console.log(`  → ${prompt} installed for ${agent}`);
-        }
-    }
-
-    console.log('Done.');
+  const installed = installBundle(
+    agents,
+    prompts.map(prompt => path.join(PROMPTS_DIR, prompt)),
+  );
+  for (const agent of agents) {
+    for (const prompt of prompts) console.log(`  -> ${prompt} initialized for ${agent}`);
+  }
+  console.log(`Initialized ${installed.length} files.`);
+  return installed;
 }
 
 module.exports = { init };
-
-if (require.main === module) init();
+if (require.main === module) {
+  init().catch(error => {
+    console.error(error.message);
+    process.exitCode = 1;
+  });
+}

@@ -2,9 +2,8 @@
 const { init } = require('./commands/init');
 
 const command = process.argv[2];
-
 if (command === 'init') {
-    init();
+  init().catch(error => { console.error(error.message); process.exitCode = 1; });
 } else {
-    console.log('Usage: index.js init');
+  console.log('Usage: bugwisp init');
 }

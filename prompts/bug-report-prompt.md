@@ -154,14 +154,17 @@ When the CLI result contains a non-null `adfPath`:
 1. Read the saved ADF JSON exactly once solely to deserialize the complete Jira MCP argument object.
 2. Pass that entire object directly to the Jira MCP create-issue tool without modifying, reconstructing, validating, or selectively copying fields.
 3. Make exactly one Jira create attempt.
-4. If Jira returns an error, report the exact MCP error and stop. Do not repair the payload, change issue type or parent, downgrade format, or retry.
+4. If Jira returns an error, report the exact MCP error and ask the user whether to generate or send the Markdown fallback. Do not repair the payload, change issue type or parent, or retry.
+   - If the user confirms, invoke the existing Markdown path and report its result together with the original Jira error.
+   - If the user declines, stop without generating or sending Markdown and report the original Jira error.
+   - If confirmation is unavailable, stop without generating or sending Markdown and report the original Jira error.
 5. On success, run the CLI rename operation using the returned issue key and both provisional paths:
    ```bash
    node src/scripts/generate-report.js --rename-jira-key <issue-key> --adf-path <adf-path> --markdown-path <markdown-path>
    ```
    Use the JSON paths returned by this command as the final artifact paths. This produces one shared basename, such as `KAN-123-finding.json` and `KAN-123-finding.md`.
 6. Return the Jira issue key and URL plus the final ADF and Markdown paths.
-7. If the rename command fails, retain and report the original CLI paths and the exact rename error. Do not retry Jira creation.
+7. If the rename command fails, retain and report the original CLI paths and the exact rename error. Do not retry Jira creation. Ask whether to generate or send the Markdown fallback using the same confirmation outcomes above.
 
 When the CLI result has `adfPath: null`, return the Markdown path and do not call Jira MCP.
 

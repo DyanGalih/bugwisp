@@ -1,4 +1,8 @@
 {
+  "name": "@dyangalih/bugwisp",
+  "version": "0.1.0",
+  "bin": { "bugwisp": "index.js" },
+  "files": ["index.js", "commands/init.js", "lib/adf-generator.js", "lib/installer.js", "lib/markdown-generator.js", "lib/pt-report-generator.js", "lib/slug.js", "prompts/bug-report-prompt.md", "prompts/markdown-generator.md", "scripts/generate-report.js", "scripts/generate-final-report.js", "templates/adf/", "templates/markdown/", "README.md"],
   "scripts": {
     "report:generate": "node scripts/generate-report.js",
     "test": "node --test"

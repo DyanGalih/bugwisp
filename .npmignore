@@ -1,0 +1,13 @@
+.env
+.env.example
+tmp/
+reporting/
+templates/raw/
+lib/*.test.js
+scripts/*.test.js
+*.json
+!package.json
+!package-lock.json
+.git/
+.github/
+.vscode/
