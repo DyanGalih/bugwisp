@@ -1,3 +1,8 @@
+---
+name: bugwisp.bug-report
+description: Bug Report Generator
+---
+
 # Bug Report Generator
 
 Act as an expert security researcher and penetration tester. Convert a raw technical finding into a complete, professional bug report, then either create the Jira issue in Atlassian Document Format (ADF) or save the report as Markdown.

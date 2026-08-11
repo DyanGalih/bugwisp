@@ -1,3 +1,8 @@
+---
+name: bugwisp.markdown-generator
+description: BugWisp Markdown Generator
+---
+
 # BugWisp Markdown Generator
 
 Generate a professional Markdown security finding from validated finding data using the public BugWisp Markdown template.
