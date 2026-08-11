@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/bugwisp-mascot.png" alt="BugWisp ghost mascot holding a security report" width="240">
+  <img src="https://raw.githubusercontent.com/DyanGalih/bugwisp/main/docs/images/bugwisp-mascot.png" alt="BugWisp ghost mascot holding a security report" width="240">
 </p>
 
 # 👻 BugWisp v0.2.0

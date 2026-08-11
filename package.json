@@ -10,5 +10,13 @@
   "dependencies": {
     "enquirer": "^2.4.1",
     "zod": "^4.4.3"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DyanGalih/bugwisp.git"
   }
 }
