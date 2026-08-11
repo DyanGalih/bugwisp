@@ -1,8 +1,18 @@
 {
   "name": "@dyangalih/bugwisp",
-  "version": "0.2.0",
-  "bin": { "bugwisp": "index.js" },
-  "files": ["index.js", "commands/", "lib/", "prompts/", "scripts/", "templates/", "README.md"],
+  "version": "0.2.1",
+  "bin": {
+    "bugwisp": "index.js"
+  },
+  "files": [
+    "index.js",
+    "commands/",
+    "lib/",
+    "prompts/",
+    "scripts/",
+    "templates/",
+    "README.md"
+  ],
   "scripts": {
     "report:generate": "node scripts/generate-report.js",
     "test": "node --test"
